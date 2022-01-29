@@ -2,6 +2,8 @@ import random
 import json
 import pickle
 import numpy as np
+import re
+
 
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -11,6 +13,8 @@ from speech_to_text import main as s_t_t
 from text_to_speech import main as t_t_s
 from browserSearch import main as m
 from browserSearch import search as s
+from calc import calc as c
+from open_app import main as open_app
 
 lemmatizer = WordNetLemmatizer()
 intents = json.loads(open('intents.json').read())
@@ -70,7 +74,16 @@ if res == "Hello sir":
             stop = True
         print(res)
         t_t_s(res)
-        if "opening" in res:
+        if "opening" in res and "app" not in res:
             m(res)
-        if "search" in message:
-            s(message)    
+        if "searching" in res:
+            s(message)  
+        if " / " in message or " * " in message or " + " in message or " - " in message:
+            pattern = re.compile("^\d{1,}(\.\d{1,})?[ ]?[-+*/][ ]?\d{1,}(\.\d{1,})?$")    
+            if re.match(pattern, message):
+                c(message) 
+            else:
+                print("can't do this calculation, please say open calculator to open the calculator, and do it yourself")
+                t_t_s("can't do this calculation, please say open calculator to open the calculator, and do it yourself")
+        if "opening" in res and "app" in res:
+            open_app(res)

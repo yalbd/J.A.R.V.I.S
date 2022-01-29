@@ -9,11 +9,7 @@ def main():
 
         audio = r.listen(source)
 
-        try:
-            print(r.recognize_google(audio))
-        
-        except Exception as e:
-            print("ERROR : " + str(e))
+        print(r.recognize_google(audio))
         return r.recognize_google(audio)
             
 
